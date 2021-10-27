@@ -67,7 +67,7 @@ public class Commands {
         }
     }
 }
-//create epic name1:varchar name2:int || CREATE TABLE epic(`name1` varchar(45), `name2` int)
+//create epic name1:varchar name2:int
 //add epic "asf" 123
 //get epic
 // `
