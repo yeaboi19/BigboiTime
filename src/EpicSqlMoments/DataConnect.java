@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DataConnect {
     private Connection con;
-    private static DataConnect instance = new DataConnect();
+    private static final DataConnect instance = new DataConnect();
     private DataConnect(){
         try {
             con = DriverManager.getConnection(Info.HOST,Info.USER,Info.PASSWORD);

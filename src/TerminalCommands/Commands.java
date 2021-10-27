@@ -2,18 +2,14 @@ package TerminalCommands;
 
 import EpicSqlMoments.DataConnect;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Commands {
     DataConnect d = DataConnect.getInstance();
     Connection con = d.getConnection();
-    String mainText;
 
-    public Commands(String mainText) {
-        this.mainText = mainText;
-        PreparedStatement p = null;
+    public Commands() {
+        PreparedStatement p;
 
         try {
             p = con.prepareStatement("USE samee");
@@ -24,42 +20,54 @@ public class Commands {
 
     }
 
-    public int createTable() throws SQLException {
+    public void createTable(String mainText) throws SQLException {//Create Table epic (`name1` varChar(45),`name2` int)
         String[] arr = mainText.split(" ");
-        String mainCom = "CREATE TABLE "; // CREATE TABLE
-        mainCom+=arr[1]+"(";              // [TableMain]
-        for(int i=2;i<arr.length;i++){
-            System.out.println("for func worked"); //  ------
+        StringBuilder mainCom = new StringBuilder("CREATE TABLE "+arr[1]+"("); // CREATE TABLE [tableName]
+        for(int i=2;i<arr.length;i++){//  ------
             String[] temp = arr[i].split(":");
             if(temp[1].equalsIgnoreCase("varchar")){
                 temp[1]+="(45)";
             }
             if(i==2){
-                mainCom+="`"+temp[0]+"` "+temp[1];
+                mainCom.append("`"+temp[0]+"` "+temp[1]);
             }else{
-                mainCom+=", `"+temp[0]+"` "+temp[1];
+                mainCom.append(", `"+temp[0]+"` "+temp[1]);
             }
         }                                         // ------- [ColumnName] [datatype]
-        mainCom+=")";
-        PreparedStatement p = con.prepareStatement(mainCom);
+        mainCom.append(")");
+        System.out.println(mainCom);
+        PreparedStatement p = con.prepareStatement(mainCom.toString());
         p.execute();
-        return 0;
     }
-    public int addThings(){ //Insert into epic Values("asdf",123);
+    public void addThings(String mainText) throws SQLException { //Insert into epic Values("asdf",123);
         String[] arr = mainText.split(" ");
-        String mainCom ="Insert into ";
-        mainCom+=arr[1];
+        StringBuilder mainCom = new StringBuilder("Insert into "+arr[1]+" Values(");
         for (int i = 2; i < arr.length; i++) {
-
+            if(i==2){
+                mainCom.append(arr[i]);
+            }else{
+                mainCom.append(", "+arr[i]);
+            }
         }
-        return 0;
+        mainCom.append(")");
+        System.out.println(mainCom);
+        PreparedStatement p = con.prepareStatement(mainCom.toString());
+        p.execute();
     }
-    public void getAll(){
+    public void getAll(String mainText) throws SQLException {
         String[] arr = mainText.split(" ");
-        return;
+        PreparedStatement p = con.prepareStatement("Select * From "+arr[1]);
+        ResultSet res = p.executeQuery();
+        ResultSetMetaData rsmd = res.getMetaData();
+        while (res.next()){
+            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                System.out.print(res.getString(i)+" ");
+            }
+            System.out.println();
+        }
     }
 }
-//create epic name1:varchar name2:int
-//add epic asf 123
+//create epic name1:varchar name2:int || CREATE TABLE epic(`name1` varchar(45), `name2` int)
+//add epic "asf" 123
 //get epic
 // `

@@ -3,11 +3,6 @@ import TerminalCommands.Commands;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-/*
-TODO: in Commands think of what would getAll function return
-
- */
-
 
 public class Main {
     public static void main(String[] args) {
@@ -15,17 +10,23 @@ public class Main {
         String mainString = input.nextLine();
         String[] array = mainString.split(" ");
 
-        Commands com = new Commands(mainString);
-        try {
-            if (array[0].equalsIgnoreCase("create")) {
-                com.createTable();
-            } else if (array[0].equalsIgnoreCase("add")) {
-                com.addThings();
-            } else if (array[0].equalsIgnoreCase("get")) {
-                com.getAll();
+        Commands com = new Commands();//Command klasis meoce lineze databases name shecvale
+        while(true){
+            try {
+                if (array[0].equalsIgnoreCase("create")) {
+                    com.createTable(mainString);
+                } else if (array[0].equalsIgnoreCase("add")) {
+                    com.addThings(mainString);
+                } else if (array[0].equalsIgnoreCase("get")) {
+                    com.getAll(mainString);
+                }else if(array[0].equalsIgnoreCase("exit")){
+                    break;
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
             }
-        }catch (SQLException e){
-            e.printStackTrace();
+            mainString = input.nextLine();
+            array = mainString.split(" ");
         }
 
     }
